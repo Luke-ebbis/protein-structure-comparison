@@ -1,0 +1,9 @@
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - perl
+  - graphviz
+  - wget
+  - curl
+
