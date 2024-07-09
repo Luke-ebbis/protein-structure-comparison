@@ -120,7 +120,7 @@ rule contact_map:
     mkdir {output} -p
     cd workflow/scripts/dependencies/distance-map/
     unset PIXI_PROJECT_MANIFEST
-    pixi run map  ../../../../{input} {output}
+    pixi run map  ../../../../{input} ../../../../{output}
     """
 
 ## tm:

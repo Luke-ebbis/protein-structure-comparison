@@ -1,6 +1,5 @@
-# snakemake-pixi
+# Protein structure analysis workflow
 
-Building snakemake workflows with pixi ✨
 
 ## Installation
 
@@ -14,6 +13,23 @@ curl -fsSL https://pixi.sh/install.sh | bash
 pixi install
 ```
 
+Because of the dependency on apptainer, this workflow only works on linux.
+
 ## Usage
 
-Run `pixi run help` for the help page.
+Run `pixi run help` for the help page. Targets can be made using `pixi run make <target>`
+
+## Example
+
+## Contact map and subunit graph.
+
+In this example, we will make a contact map and subunit graph for `6RW8`:
+
+![](resources/6rw8.png)
+
+In the terminal type
+
+```bash
+pixi run make results/contact-map/6rw8
+```
+
