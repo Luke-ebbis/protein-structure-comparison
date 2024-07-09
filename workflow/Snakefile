@@ -58,12 +58,20 @@ def get_input(wildcards):
   files = os.listdir("data")
   match = [f for f in files if wildcards.identifier.startswith(f.split(".")[0])]
   match = [f for f in files if f != ".gitkeep"]
+
+  # If the model could be from AF3
+  if "_model_" in wildcards.identifier:
+    match = [f for f in match if f.startswith(wildcards.identifier.split("_model_")[0])]
+  else:
+    match = [f for f in match if f.startswith(wildcards.identifier)]
   if match:
     # file is local
     match = match.pop()
-    if match.endswith("zip"):
+    if match.endswith("zip") and len(wildcards.identifier) != 4:
       unzip_ckp = checkpoints.unzip.get(identifier=match.replace(".zip", ""))
-      final_target = f"{unzip_ckp.output[0]}/{wildcards.identifier}"
+      print(unzip_ckp.output)
+      final_target = f"{unzip_ckp.output[0]}/{wildcards.identifier}.{wildcards.ext}"
+      return final_target
     else:
       final_target = f"data/{wildcards.identifier}"
     output = f"{final_target}.{final_format}"
