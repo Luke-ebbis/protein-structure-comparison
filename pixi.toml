@@ -8,10 +8,9 @@ platforms = ["linux-64"]
 
 
 [tasks]
-make = "snakemake --sdm conda -c 1"
+make = "snakemake --sdm apptainer conda -c 1"
 test = "snakemake --sdm conda -c 1 -np"
 slurm = "snakemake --sdm conda --workflow-profile workflow/profiles/slurm"
-apptainer = "snakemake --sdm conda apptainer -c 1"
 help  = "bash workflow/help.sh"
 make-help  = "sed -n 's/^##//p' workflow/Snakefile"
 make-dag = "mkdir resources; snakemake --quiet all -c 1 'results/method.png' && mv results/method.png resources; mv resources/method.png resources/pipeline.png"

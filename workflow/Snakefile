@@ -1,7 +1,7 @@
-## <NAME>
-## 
-## DESCRIPTION
-## 
+## Structure analysis pipeline
+##
+## This pipeline analyses protein structures using plip, tmalgin or makes a contact map.
+##
 ## Rules
 ## -----
 ##
@@ -11,21 +11,35 @@ import glob
 
 ruleorder: download_rcsb > convert > move
 
+
+## unzip
+##    If you place zip files from alphafold3 in the data folder, this rule
+##    extracts the structures.
+##
 checkpoint unzip:
   input: "data/{identifier}.zip"
   output:
     d=directory("data/{identifier}-unzipped")
   shell: "mkdir {output} -p; unzip {input} -d {output.d}"
 
+
+## download_rcsb:
+##    If a input file is missing, it is download with this rule.
+##
 checkpoint download_rcsb:
   output:
     "results/downloads/{identifier}.{ext}"
   shell:
     "wget -O {output} 'https://files.rcsb.org/download/{wildcards.identifier}.{wildcards.ext}' --no-check-certificate"
 
+
 rule f:
+  """
+  This rule makes sure that the content of the AF3 folders gets detected.
+  """
   input: rules.unzip.output.d
   output: "data/{identifier}-unzipped/{name}.cif"
+
 
 def get_input(wildcards):
   """Determine the source of the input file
@@ -60,16 +74,21 @@ def get_input(wildcards):
 
   return output
 
+
 rule move:
+  """
+  This rule moves all data to the same folder, so the analysis
+  rules are easier to write.
+  """
   input: get_input
-  output: "results/input/{identifier}.{ext}"
+  output: temp("results/input/{identifier}.{ext}")
   shell: "cp {input} {output}"
 
 
 rule convert:
   conda: 'envs/comparison.yml'
   input: "results/input/{identifier}.cif"
-  output: "results/input/{identifier}.pdb"
+  output: temp("results/input/{identifier}.pdb")
   shell: "python3 workflow/scripts/convert-cf-to-pdb.py {input} {output}"
 
 
@@ -89,18 +108,17 @@ rule plip:
     """
     python3 /src/plip/plipcmd.py  -f {input} -o {output} -yvxtp
     """
-## tm_align:
-##    Run the TMalign programme.
+
+## tm:
+##    Run the a programme from the tm family.
 ##
 rule tm_align:
   conda: 'envs/comparison.yml'
   input:
     x="results/input/{x}.pdb",
     y="results/input/{y}.pdb"
-  output: "results/tm_align/{x}-{y}.align.txt"
-  shell: "TMalign {input.x} {input.y} > {output}; cat {output}"
-
-
+  output: "results/tm/{x}-{y}.{type}.txt"
+  shell: "TM{wildcards.type} {input.x} {input.y} > {output}; cat {output}"
 
 
 ## help:
@@ -110,11 +128,13 @@ rule help:
   input: "workflow/Snakefile"
   shell: "sed -n 's/^##//p' {input}"
 
+
 ## clean:
 ##    Clean all outputs from the results folder.
 ##
 rule clean:
   shell: "rm -rf results/*"
+
 
 ## build_overview:
 ##    Print the directed acyclic graph.
@@ -126,6 +146,7 @@ rule build_overview:
     """
     snakemake -c 1 --forceall --dag > {output}
     """
+
 
 ## build_overview:
 ##    Print the directed acyclic graph.
@@ -142,6 +163,7 @@ rule plot_overview:
 
 ## build_overview_ascii:
 ##    Prints the graph in ascii format.
+##
 rule build_ascii_graph:
   container: "docker://kubler/graph-easy:latest"
   input: "results/method.dot"
