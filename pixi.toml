@@ -1,7 +1,7 @@
 [project]
 name = "snakemake-pixi"
 version = "0.1.0"
-description = "A template for installing and running a snakemake workflow with pixi."
+description = "A workflow for analysing protein structures on the CLI"
 authors = ["Sibbe Bakker <sibbe.l.bakker@gmail.com>"]
 channels = ["conda-forge", "bioconda"]
 platforms = ["linux-64"]

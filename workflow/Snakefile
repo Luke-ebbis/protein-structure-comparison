@@ -109,6 +109,20 @@ rule plip:
     python3 /src/plip/plipcmd.py  -f {input} -o {output} -yvxtp
     """
 
+## contact_map:
+##    Calculate the contact map of a structure.
+##
+rule contact_map:
+  input: "results/input/{identifier}.pdb"
+  output: directory("results/contact-map/{identifier}")
+  shell:
+    """
+    mkdir {output} -p
+    cd workflow/scripts/dependencies/distance-map/
+    unset PIXI_PROJECT_MANIFEST
+    pixi run map  ../../../../{input} {output}
+    """
+
 ## tm:
 ##    Run the a programme from the tm family.
 ##
@@ -172,4 +186,13 @@ rule build_ascii_graph:
   shell:
     """
     cat {input} |  graph-easy --from=dot --as_ascii out >  {output}
+    """
+
+
+rule git_prep:
+  output: touch("results/checkpoints/git")
+  shell:
+    """
+    git submodule init; git submodule update
+    git submodule update --remote --merge
     """
