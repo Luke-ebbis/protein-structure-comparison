@@ -57,7 +57,7 @@ def get_input(wildcards):
   final_format = wildcards.ext
   files = os.listdir("data")
   match = [f for f in files if wildcards.identifier.startswith(f.split(".")[0])]
-
+  match = [f for f in files if f != ".gitkeep"]
   if match:
     # file is local
     match = match.pop()
@@ -71,7 +71,6 @@ def get_input(wildcards):
     # We need to download the file
     download_rcsb_ckp = checkpoints.download_rcsb.get(**wildcards)
     output = download_rcsb_ckp.output
-
   return output
 
 
@@ -109,19 +108,34 @@ rule plip:
     python3 /src/plip/plipcmd.py  -f {input} -o {output} -yvxtp
     """
 
+rule install:
+  output: touch("results/checkpoints/install_{dep}")
+  shell:
+    """
+    touch  {output}
+    cd workflow/scripts/dependencies/{wildcards.dep}/
+    unset PIXI_PROJECT_MANIFEST
+    pixi install
+    """
+
 ## contact_map:
 ##    Calculate the contact map of a structure.
 ##
 rule contact_map:
-  input: "results/input/{identifier}.pdb"
+  input:
+    data="results/input/{identifier}.pdb",
+    ckp="results/checkpoints/git",
+    install="results/checkpoints/install_distance-map"
   output: directory("results/contact-map/{identifier}")
   shell:
     """
     mkdir {output} -p
     cd workflow/scripts/dependencies/distance-map/
     unset PIXI_PROJECT_MANIFEST
-    pixi run map  ../../../../{input} ../../../../{output}
+    pixi run map  ../../../../{input.data} ../../../../{output}
     """
+
+
 
 ## tm:
 ##    Run the a programme from the tm family.
@@ -194,5 +208,4 @@ rule git_prep:
   shell:
     """
     git submodule init; git submodule update
-    git submodule update --remote --merge
     """
