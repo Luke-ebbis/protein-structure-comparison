@@ -21,15 +21,15 @@ Run `pixi run help` for the help page. Targets can be made using `pixi run make 
 
 ## Example
 
-## Contact map and subunit graph.
+In this example, we will compare the structures of yeast V-ATPase state 2 ([6O7W](https://www.rcsb.org/structure/6O7W)) to that of Citrus ([7UWB](https://www.rcsb.org/structure/7UWB))
 
-In this example, we will make a contact map and subunit graph for `6RW8`:
 
-![](resources/6rw8.png)
 
 In the terminal type
 
 ```bash
-pixi run make results/contact-map/6rw8
+# you must type lowercase identifiers
+pixi run make results/contact-map/6o7v results/contact-map/7uwb results/tm/7uw9-6o7w.score.txt results/plip/6o7v results/plip/7uwb--cores 5
 ```
 
+To start the analysis with 5 paralel processes.
