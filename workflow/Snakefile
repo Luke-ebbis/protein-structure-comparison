@@ -9,6 +9,8 @@
 import os
 import glob
 
+ruleorder: convert > move
+
 checkpoint unzip:
   input: "data/{identifier}.zip"
   output: 
@@ -39,6 +41,14 @@ rule move:
   output: "results/input/{identifier}.{ext}"
   shell: "cp {input} {output}"
 
+
+rule convert:
+  conda: 'envs/comparison.yml'
+  input: "results/input/{identifier}.cif"
+  output: "results/input/{identifier}.pdb"
+  shell: "python3 workflow/scripts/convert-cf-to-pdb.py {input} {output}"
+
+
 ## plip:
 ##    Run the plip programme on the input data-file to determine the protein
 ##    ligand interactions.
@@ -48,9 +58,9 @@ rule plip:
   container:
     "docker://pharmai/plip:2.3.0-multi"
   input:
-    "input/{identifier}.{ext}"
+    "results/input/{identifier}.pdb"
   output:
-    directory("results/plip/{identifier}.{ext}"),
+    directory("results/plip/{identifier}"),
   shell:
     """
     python3 /src/plip/plipcmd.py  -f {input} -o {output} -yvxtp
