@@ -9,13 +9,19 @@
 import os
 import glob
 
-ruleorder: convert > move
+ruleorder: download_rcsb > convert > move
 
 checkpoint unzip:
   input: "data/{identifier}.zip"
-  output: 
-    d=directory("data/{identifier}-unzipped"),
+  output:
+    d=directory("data/{identifier}-unzipped")
   shell: "mkdir {output} -p; unzip {input} -d {output.d}"
+
+checkpoint download_rcsb:
+  output:
+    "results/downloads/{identifier}.{ext}"
+  shell:
+    "wget -O {output} 'https://files.rcsb.org/download/{wildcards.identifier}.{wildcards.ext}' --no-check-certificate"
 
 rule f:
   input: rules.unzip.output.d
@@ -26,14 +32,22 @@ def get_input(wildcards):
   final_target = wildcards.identifier
   final_format = wildcards.ext
   files = os.listdir("data")
-  match = [f for f in files if wildcards.identifier.startswith(f.split(".")[0])].pop()
+  match = [f for f in files if wildcards.identifier.startswith(f.split(".")[0])]
 
-  if match.endswith("zip"):
-    unzip_ckp = checkpoints.unzip.get(identifier=match.replace(".zip", ""))
-    final_target = f"{unzip_ckp.output[0]}/{wildcards.identifier}"
+  if match:
+    # file is local
+    match = match.pop()
+    if match.endswith("zip"):
+      unzip_ckp = checkpoints.unzip.get(identifier=match.replace(".zip", ""))
+      final_target = f"{unzip_ckp.output[0]}/{wildcards.identifier}"
+    else:
+      final_target = f"data/{wildcards.identifier}"
+    output = f"{final_target}.{final_format}"
   else:
-    final_target = f"data/{wildcards.identifier}"
-  output = f"{final_target}.{final_format}"
+    # We need to download the file
+    download_rcsb_ckp = checkpoints.download_rcsb.get(**wildcards)
+    output = download_rcsb_ckp.output
+
   return output
 
 rule move:
@@ -71,10 +85,13 @@ rule plip:
 rule tm_align:
   conda: 'envs/comparison.yml'
   input:
-    x="target/{x}.{ext}",
-    y="data/{y}.pdb"
-  output: "results/metabolon-prediction/tm-scores/af3_enolase"
-  shell: "TMalign {input.x} {input.y} > {output}"
+    x="results/input/{x}.pdb",
+    y="results/input/{y}.pdb"
+  output: "results/tm_align/{x}-{y}.align.txt"
+  shell: "TMalign {input.x} {input.y} > {output}; cat {output}"
+
+
+
 
 ## help:
 ##    Show the help.
