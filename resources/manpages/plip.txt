@@ -1,0 +1,57 @@
+usage: PLIP [-h] (-f INPUT [INPUT ...] | -i PDBID [PDBID ...])
+            [-o OUTPATH | -O] [--rawstring] [-v] [-q] [-s] [-p] [-x] [-t] [-y]
+            [--maxthreads MAXTHREADS] [--breakcomposite] [--altlocation]
+            [--nofix] [--nofixfile] [--nopdbcanmap] [--dnareceptor]
+            [--name OUTPUTFILENAME] [--peptides PEPTIDES [PEPTIDES ...] |
+            --intra INTRA] [--keepmod] [--nohydro] [--model MODEL]
+
+The Protein-Ligand Interaction Profiler (PLIP) Version 2.3.0 is a command-line
+based tool to analyze interactions in a protein-ligand complex. If you are
+using PLIP in your work, please cite: Adasme,M. et al. PLIP 2021: expanding
+the scope of the protein-ligand interaction profiler to DNA and RNA. Nucl.
+Acids Res. (05 May 2021), gkab294. doi: 10.1093/nar/gkab294 Supported and
+maintained by: PharmAI GmbH (2020-2021) - www.pharm.ai - hello@pharm.ai
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f INPUT [INPUT ...], --file INPUT [INPUT ...]
+                        Set input file, '-' reads from stdin
+  -i PDBID [PDBID ...], --input PDBID [PDBID ...]
+  -o OUTPATH, --out OUTPATH
+  -O, --stdout          Write to stdout instead of file
+  --rawstring           Use Python raw strings for stdin
+  -v, --verbose         Turn on verbose mode
+  -q, --quiet           Turn on quiet mode
+  -s, --silent          Turn on silent mode
+  -p, --pics            Additional pictures
+  -x, --xml             Generate report file in XML format
+  -t, --txt             Generate report file in TXT (RST) format
+  -y, --pymol           Additional PyMOL session files
+  --maxthreads MAXTHREADS
+                        Set maximum number of main threads (number of binding
+                        sites processed simultaneously).If not set, PLIP uses
+                        all available CPUs if possible.
+  --breakcomposite      Don't combine ligand fragments with covalent bonds but
+                        treat them as single ligands for the analysis.
+  --altlocation         Also consider alternate locations for atoms (e.g.
+                        alternate conformations).
+  --nofix               Turns off fixing of PDB files.
+  --nofixfile           Turns off writing files for fixed PDB files.
+  --nopdbcanmap         Turns off calculation of mapping between canonical and
+                        PDB atom order for ligands.
+  --dnareceptor         Treat nucleic acids as part of the receptor structure
+                        (together with any present protein) instead of as a
+                        ligand.
+  --name OUTPUTFILENAME
+                        Set a filename for the report TXT and XML files. Will
+                        only work when processing single structures.
+  --peptides PEPTIDES [PEPTIDES ...], --inter PEPTIDES [PEPTIDES ...]
+                        Allows to define one or multiple chains as peptide
+                        ligands or to detect inter-chain contacts
+  --intra INTRA         Allows to define one chain to analyze intra-chain
+                        contacts.
+  --keepmod             Keep modified residues as ligands
+  --nohydro             Do not add polar hydrogens in case your structure
+                        already contains hydrogens.
+  --model MODEL         Model number to be used for multi-model structures.
+
