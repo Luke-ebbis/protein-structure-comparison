@@ -15,7 +15,7 @@ apptainer = "snakemake --sdm conda apptainer -c 1"
 help  = "bash workflow/help.sh"
 make-help  = "sed -n 's/^##//p' workflow/Snakefile"
 make-dag = "mkdir resources; snakemake --quiet all -c 1 'results/method.png' && mv results/method.png resources; mv resources/method.png resources/pipeline.png"
-make-ascii = "mkdir resources; pixi run make results/method-simple.ascii &&  mv results/method-simple.ascii resources/pipeline.ascii; cat resources/pipeline.ascii"
+make-ascii = "mkdir resources; pixi run apptainer results/method-simple.ascii &&  mv results/method-simple.ascii resources/pipeline.ascii; cat resources/pipeline.ascii"
 
 
 [dependencies]
