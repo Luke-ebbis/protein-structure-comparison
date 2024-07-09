@@ -28,6 +28,16 @@ rule f:
   output: "data/{identifier}-unzipped/{name}.cif"
 
 def get_input(wildcards):
+  """Determine the source of the input file
+
+  branches:
+    1) If the input file matches the name of a zip folder, then the
+  folder gets unzipped, and the cif file gets extracted--assuming AF3 directory
+  formats.
+    2) File is present directly in the data folder. It gets moved directly to
+  the input folder.
+    3) The file needs to be downloaded.
+  """
   # we find the file in the data folder
   final_target = wildcards.identifier
   final_format = wildcards.ext
