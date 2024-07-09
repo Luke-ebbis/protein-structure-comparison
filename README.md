@@ -32,4 +32,9 @@ In the terminal type
 pixi run make results/contact-map/6o7v results/contact-map/7uwb results/tm/7uw9-6o7w.score.txt results/plip/6o7v results/plip/7uwb--cores 5
 ```
 
-To start the analysis with 5 paralel processes.
+To start the analysis with 5 paralel processes. This will download the structures and the programmes, and
+run the analysis.
+
+| ![](resources/contact-map-6o7v-vs-7uwb.png) |
+|---------------------------------------------|
+| Subunit interaction graph between `6o7v` (left) and `7uwb` (right |
