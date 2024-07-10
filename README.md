@@ -67,7 +67,7 @@ YGAIYSVSGPVVIAENMIGCAMYELVKVGHDNLVGEVIRIDGDKATIQVYEETAGLTVGDPVLRTGKPLSVELGPGLMET
 ```
 
 
-| ![](resources/7uwb-6o7w.usalign.sup.crop.png)) |
+| ![](resources/7uwb-6o7w.usalign.sup.crop.png) |
 |---------------------------------------------|
 | Alignment between `6o7v` (red) and `7uwb` (blue) |
 
