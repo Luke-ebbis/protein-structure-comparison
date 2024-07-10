@@ -227,7 +227,7 @@ rule us_align_sup:
      mv sup_{wildcards.x}_{wildcards.y}* {output.dir}
     """
 
-rule us_align_png:
+rule us_align_pymol_session:
   input: 
     x="results/input/{x}.pdb",
     y="results/input/{y}.pdb",
@@ -236,23 +236,23 @@ rule us_align_png:
   conda: 'envs/comparison.yml'
   shell:
     """
-    cp {input.x} {wildcards.x}.pdb
-    cp {input.y} {wildcards.y}.pdb
-    cp {input.superposition}/*pdb . 
+    cp {input.x} {wildcards.x}.pdb 2>/dev/null
+    cp {input.y} {wildcards.y}.pdb 2>/dev/null
+    cp {input.superposition}/*pdb . 2>/dev/null
     # Modify the outputscript of USalign to make pymol sessions...
-    cp {input}/sup_{wildcards.x}_{wildcards.y}_all_atm.pml . 
+    cp {input}/sup_{wildcards.x}_{wildcards.y}_all_atm.pml .  2>/dev/null
     mv sup_{wildcards.x}_{wildcards.y}_all_atm.pml ses_sup_{wildcards.x}_{wildcards.y}_all_atm.pml
     echo "save {output}" >> ses_sup_{wildcards.x}_{wildcards.y}_all_atm.pml
     pymol -c -d @ses_sup_{wildcards.x}_{wildcards.y}_all_atm.pml
     # Cleaning up
-    rm  {wildcards.x}.pdb
-    rm  {wildcards.y}.pdb
-    rm sup_{wildcards.x}_{wildcards.y}.pdb 
-    rm ses_sup_{wildcards.x}_{wildcards.y}_all_atm.pml
+    rm  {wildcards.x}.pdb 2>/dev/null
+    rm  {wildcards.y}.pdb 2>/dev/null
+    rm sup_{wildcards.x}_{wildcards.y}.pdb 2>/dev/null
+    rm ses_sup_{wildcards.x}_{wildcards.y}_all_atm.pml 2>/dev/null
     """
 
   
-rule us_align_pymol_session:
+rule us_align_pymol_picture:
   input: 
     x="results/input/{x}.pdb",
     y="results/input/{y}.pdb",
@@ -261,16 +261,16 @@ rule us_align_pymol_session:
   conda: 'envs/comparison.yml'
   shell:
     """
-    cp {input.x} {wildcards.x}.pdb
-    cp {input.y} {wildcards.y}.pdb
-    cp {input.superposition}/*pdb . 
+    cp {input.x} {wildcards.x}.pdb 2>/dev/null
+    cp {input.y} {wildcards.y}.pdb 2>/dev/null
+    cp {input.superposition}/*pdb .  2>/dev/null
     pymol -c -d @{input}/sup_{wildcards.x}_{wildcards.y}_all_atm.pml \
       -W 2000 -H 2000 \
       -g {wildcards.x}-{wildcards.y}.usalign.sup.png \
 
-    rm  {wildcards.x}.pdb
-    rm  {wildcards.y}.pdb
-    rm sup_{wildcards.x}_{wildcards.y}.pdb 
+    rm  {wildcards.x}.pdb 2>/dev/null
+    rm  {wildcards.y}.pdb 2>/dev/null
+    rm sup_{wildcards.x}_{wildcards.y}.pdb  2>/dev/null
     mv {wildcards.x}-{wildcards.y}.usalign.sup.png {output} 
     """
 
