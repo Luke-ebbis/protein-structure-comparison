@@ -126,6 +126,19 @@ rule install:
     pixi install
     """
 
+
+## fasta:
+##    Determine the primary structure of a protein.
+##
+rule fasta:
+  conda: 'envs/comparison.yml'
+  input: "results/input/{identifier}.pdb"
+  output: "results/fasta/{identifier}.fasta"
+  shell:
+    """
+    python3 workflow/scripts/pdb2fasta.py {input} {output}
+    """
+
 ## contact_map:
 ##    Calculate the contact map of a structure.
 ##
