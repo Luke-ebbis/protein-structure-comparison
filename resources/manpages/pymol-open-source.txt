@@ -1,0 +1,92 @@
+PyMOL 3.0.0 Open-Source (7583057452), 2024-04-10
+Copyright (C) Schrodinger, LLC
+
+Usage: pymol [OPTIONS]... [FILES]... [-- CUSTOM SCRIPT ARGUMENTS]
+
+Options
+
+  --help    display this help and exit
+  --version display PyMOL version and exit
+  --gldebug use glDebugMessageCallback for GL debugging
+  --testing run pymol testing
+  --diagnostics dump system diagnostics
+
+  -1        config_mouse one_button
+  -2        config_mouse two_button
+  -a N      alias for -A
+  -A N      application configuration:
+    -A1     simple viewer window          (-qxiF -X 68 -Y 100)
+    -A3     internal GUI only, no splash  (-qx -X 68 -Y 100)
+    -A4     used by PYMOLVIEWER           (-X 68 -Y 100)
+    -A5     helper application            (-QxiICUF -X 68 -Y 100)
+    -A6     full screen presentation      (-qxieICUPF)
+  -b[N]     benchmark wizard
+  -B        (DEPRECATED)
+  -c        launch in command-line only mode for batch processing
+  -C        don't terminate on Ctrl-C
+  -d cmd    execute PyMOL command
+  -D N      defer_builds_mode=N
+  -e        full screen
+  -E N      multisampling (GL_MULTISAMPLE_ARB)
+  -f N      internal_feedback=N
+  -F        internal_feedback=0
+  -g file   save image (png) or movie (mpg)
+  -G        game mode (DEPRECATED)
+  -h        generic helper application (no controls, no feedback)
+  -H N      window height in pixels
+  -i        internal_gui=0
+  -I        auto_reinitialize=1 (Mac only)
+  -j        side-by-side stereo (stereo_mode=4)
+  -J        cd to user's home directory
+  -k        don't load pymolrc or plugins
+  -K        keep alive: when running without a GUI, don't quit after the input
+            is exhausted
+  -l file   run python script in thread (spawn)
+  -L file   load file after everything else (only if something was loaded before)
+  -m        INTERNAL - do not use (mac external GUI)
+  -M        force mono
+  -n        INTERNAL - do not use (incentive_product=1)
+  -N name   UNSUPPORTED - external gui type (pmg_qt or pmg_tk) (same as -w)
+  -o        disable security protections
+  -O N      sphere_mode=N
+  -p        read commands from STDIN
+  -P        handle scenes as if the session were opened in presentation mode
+  -q        supress startup message
+  -Q        quiet, suppress all text output
+  -r file   run python script
+  -R        launch RPC Server
+  -s file   log to file
+  -S        force stereo
+  -t N      stereo_mode=N
+  -T name   UNSUPPORTED - Tcl/Tk GUI skin
+  -u file   resume log file (execute existing content and append new log output)
+  -U        UNSUPPORTED reuse the helper application
+  -v        use openvr stub instead of a real hardware
+  -V N      external GUI window height in pixels
+  -w name   UNSUPPORTED - external gui type (pmg_qt or pmg_tk) (same as -N)
+  -W N      window width in pixels
+  -x        no external gui
+  -X N      window x position on screen
+  -y        exit on error
+  -Y N      window y position on screen
+  -z N      window_visible=N
+  -Z N      zoom_mode=N
+
+File Extensions
+
+  pdb,sdf,...     molecular structure files
+  ccp4,dx,...     map files
+
+  py,pym,pyc      python script
+  pml             PyMOL command script
+
+  p5m             implies -A5 (PDB File)
+  psw             implies -A6 (PyMOL Show File)
+  pwg             PyMOL web GUI
+
+Active "pymolrc" Files
+
+  (no pymolrc file found)
+
+Mail bug reports to https://lists.sourceforge.net/lists/listinfo/pymol-users
+

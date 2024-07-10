@@ -202,6 +202,47 @@ rule us_align:
      USalign {input.x} {input.y} -mm {params.mm} -ter {params.ter} > {output}; cat {output}
     """
 
+rule us_align_sup:
+  container:
+    "docker://f1lem0n/usalign:latest"
+  input:
+    x="results/input/{x}.pdb",
+    y="results/input/{y}.pdb"
+  output: 
+    dir=directory("results/comparison/{x}-{y}.usalign.sup"),
+  params:
+    ter="0",
+    mm="1",
+  shell:
+    """
+     USalign {input.x} {input.y} -mm {params.mm} -ter {params.ter} -o sup_{wildcards.x}_{wildcards.y}
+     mkdir {output} -p
+     mv sup_{wildcards.x}_{wildcards.y}* {output.dir}
+    """
+
+rule us_align_png:
+  input: 
+    x="results/input/{x}.pdb",
+    y="results/input/{y}.pdb",
+    superposition="results/comparison/{x}-{y}.usalign.sup"
+  output: "results/comparison/{x}-{y}.usalign.sup.png"
+  conda: 'envs/comparison.yml'
+  shell:
+    """
+    cp {input.x} {wildcards.x}.pdb
+    cp {input.y} {wildcards.y}.pdb
+    cp {input.superposition}/*pdb . 
+    pymol -c -d @{input}/sup_{wildcards.x}_{wildcards.y}_all_atm.pml \
+      -W 2000 -H 2000 \
+      -g {wildcards.x}-{wildcards.y}.usalign.sup.png \
+
+    rm  {wildcards.x}.pdb
+    rm  {wildcards.y}.pdb
+    rm sup_{wildcards.x}_{wildcards.y}.pdb 
+    mv {wildcards.x}-{wildcards.y}.usalign.sup.png {output} 
+    """
+
+  
 
 ## help:
 ##    Show the help.
