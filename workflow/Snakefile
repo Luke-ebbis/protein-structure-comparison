@@ -194,9 +194,12 @@ rule us_align:
     x="results/input/{x}.pdb",
     y="results/input/{y}.pdb"
   output: "results/comparison/{x}-{y}.usalign.txt"
+  params:
+    ter="0",
+    mm="1",
   shell:
     """
-     USalign {input.x} {input.y} > {output}; cat {output}
+     USalign {input.x} {input.y} -mm {params.mm} -ter {params.ter} > {output}; cat {output}
     """
 
 
