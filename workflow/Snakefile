@@ -100,14 +100,6 @@ rule convert:
   output: "results/input/{identifier}.pdb"
   shell: "python3 workflow/scripts/convert-cf-to-pdb.py {input} {output}"
 
-# rule convert:
-  # """Convert a structure using openbabel
-  # """
-  # input: "results/input/{identifier}.cif"
-  # output: "results/input/{identifier}.pdb"
-  # container:
-    # "docker://edraizen/openbabel:latest"
-  # shell: "obabel -icif {input} -opdb -O {output}"
 
 ## plip:
 ##    Run the plip programme on the input data-file to determine the protein
@@ -176,7 +168,7 @@ rule tm_align:
   input:
     x="results/input/{x}.pdb",
     y="results/input/{y}.pdb"
-  output: "results/tm/{x}-{y}.{type}.txt"
+  output: "results/comparison/{x}-{y}.tm{type}.txt"
   shell: "TM{wildcards.type} {input.x} {input.y} > {output}; cat {output}"
 
 ## mm:
@@ -188,11 +180,25 @@ rule mm_align:
   input:
     x="results/input/{x}.pdb",
     y="results/input/{y}.pdb"
-  output: "results/mm/{x}-{y}.{type}.txt"
+  output: "results/comparison/{x}-{y}.mmalign.txt"
   shell:
     """
      /opt/MMalign/MMalign {input.x} {input.y} > {output}; cat {output} 
     """
+
+
+rule us_align:
+  container:
+    "docker://f1lem0n/usalign:latest"
+  input:
+    x="results/input/{x}.pdb",
+    y="results/input/{y}.pdb"
+  output: "results/comparison/{x}-{y}.usalign.txt"
+  shell:
+    """
+     USalign {input.x} {input.y} > {output}; cat {output}
+    """
+
 
 ## help:
 ##    Show the help.
