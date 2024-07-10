@@ -5,3 +5,4 @@ dependencies:
   - tmalign=20170708
   - biopython
   - pymol-open-source
+  - imagemagick

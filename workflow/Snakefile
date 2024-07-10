@@ -158,7 +158,14 @@ rule contact_map:
     pixi run map  ../../../../{input.data} ../../../../{output}
     """
 
-
+rule crop:
+  conda: 'envs/comparison.yml'
+  input: "results/comparison/{x}-{y}.usalign.sup.png"
+  output: "results/comparison/{x}-{y}.usalign.sup.crop.png"
+  shell:
+    """
+    magick {input} -trim +repage {output}
+    """
 
 ## tm:
 ##    Run the a programme from the tm family.
@@ -225,6 +232,31 @@ rule us_align_png:
     x="results/input/{x}.pdb",
     y="results/input/{y}.pdb",
     superposition="results/comparison/{x}-{y}.usalign.sup"
+  output: "results/comparison/{x}-{y}.usalign.sup.pse"
+  conda: 'envs/comparison.yml'
+  shell:
+    """
+    cp {input.x} {wildcards.x}.pdb
+    cp {input.y} {wildcards.y}.pdb
+    cp {input.superposition}/*pdb . 
+    # Modify the outputscript of USalign to make pymol sessions...
+    cp {input}/sup_{wildcards.x}_{wildcards.y}_all_atm.pml . 
+    mv sup_{wildcards.x}_{wildcards.y}_all_atm.pml ses_sup_{wildcards.x}_{wildcards.y}_all_atm.pml
+    echo "save {output}" >> ses_sup_{wildcards.x}_{wildcards.y}_all_atm.pml
+    pymol -c -d @ses_sup_{wildcards.x}_{wildcards.y}_all_atm.pml
+    # Cleaning up
+    rm  {wildcards.x}.pdb
+    rm  {wildcards.y}.pdb
+    rm sup_{wildcards.x}_{wildcards.y}.pdb 
+    rm ses_sup_{wildcards.x}_{wildcards.y}_all_atm.pml
+    """
+
+  
+rule us_align_pymol_session:
+  input: 
+    x="results/input/{x}.pdb",
+    y="results/input/{y}.pdb",
+    superposition="results/comparison/{x}-{y}.usalign.sup"
   output: "results/comparison/{x}-{y}.usalign.sup.png"
   conda: 'envs/comparison.yml'
   shell:
@@ -241,8 +273,6 @@ rule us_align_png:
     rm sup_{wildcards.x}_{wildcards.y}.pdb 
     mv {wildcards.x}-{wildcards.y}.usalign.sup.png {output} 
     """
-
-  
 
 ## help:
 ##    Show the help.
