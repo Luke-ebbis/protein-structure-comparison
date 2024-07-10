@@ -93,11 +93,21 @@ rule move:
 
 
 rule convert:
+  """Convert a structure using biopython
+  """
   conda: 'envs/comparison.yml'
   input: "results/input/{identifier}.cif"
-  output: temp("results/input/{identifier}.pdb")
+  output: "results/input/{identifier}.pdb"
   shell: "python3 workflow/scripts/convert-cf-to-pdb.py {input} {output}"
 
+# rule convert:
+  # """Convert a structure using openbabel
+  # """
+  # input: "results/input/{identifier}.cif"
+  # output: "results/input/{identifier}.pdb"
+  # container:
+    # "docker://edraizen/openbabel:latest"
+  # shell: "obabel -icif {input} -opdb -O {output}"
 
 ## plip:
 ##    Run the plip programme on the input data-file to determine the protein
@@ -169,6 +179,20 @@ rule tm_align:
   output: "results/tm/{x}-{y}.{type}.txt"
   shell: "TM{wildcards.type} {input.x} {input.y} > {output}; cat {output}"
 
+## mm:
+##    Run a MM family programme.
+##
+rule mm_align:
+  container:
+    "docker://edraizen/mmalign:latest"
+  input:
+    x="results/input/{x}.pdb",
+    y="results/input/{y}.pdb"
+  output: "results/mm/{x}-{y}.{type}.txt"
+  shell:
+    """
+     /opt/MMalign/MMalign {input.x} {input.y} > {output}; cat {output} 
+    """
 
 ## help:
 ##    Show the help.
