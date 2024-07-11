@@ -21,6 +21,11 @@ the rest.
 
 Run `pixi run help` for the help page. Targets can be made using `pixi run make <target>`
 
+Place your own structures in the data directory. You can supply zip files that
+contain your structures, the pipeline will automatically unpack them. If a
+analysis is requested on a structure that cannot be found in `data`, an attempt is
+made to download it from the pdb.
+
 ## Example
 
 
@@ -41,7 +46,7 @@ pixi run make results/contact-map/6o7v results/contact-map/7uwb results/comparis
 To start the analysis with 5 paralel processes. This will download the structures and the programmes, and
 run the analysis.
 
-| ![](resources/contact-map-6o7v-vs-7uwb.png) |
+| ![](resources/output/contact-map-6o7v-vs-7uwb.png) |
 |---------------------------------------------|
 | Subunit interaction graph between `6o7v` (left) and `7uwb` (right) |
 
@@ -72,7 +77,7 @@ YGAIYSVSGPVVIAENMIGCAMYELVKVGHDNLVGEVIRIDGDKATIQVYEETAGLTVGDPVLRTGKPLSVELGPGLMET
 ```
 
 
-| ![](resources/7uwb-6o7w.usalign.sup.crop.png) |
+| ![](resources/output/7uwb-6o7w.usalign.sup.crop.png) |
 |---------------------------------------------|
 | Alignment between `6o7v` (red) and `7uwb` (blue) |
 
@@ -81,3 +86,25 @@ If this cropped png is not good enough, open the pymol session of the two protei
 ```
 pixi run pymol results/comparison/7uwb-6o7w.usalign.sup.pse 
 ```
+
+### Determining the quality of an predicted complex
+
+```
+# Calculate the amount of steric clashes between two structures.
+cp resources/examples/P60709_actin.pdb data
+pixi run make results/mol/3b5u.clashes.csv results/mol/P60709_actin.clashes.csv
+```
+
+This gives the following results:
+
+|structure|clashes|clashes\_percentage|frameid|
+|-|-|-|-|
+|results/input/3b5u.pdb|5|0.012176708392187425|0|
+|results/input/P60709\_actin.pdb|2799|5.318057455540356|0|
+
+This shows that the `P60709_actin` structure is not close to the crystal structure. An Ramachandran analysis, 
+
+
+| ![](resources/output/3b5u.png) ![](resources/output/P60709_actin.png) |
+|---------------------------------------------|
+| Ramachandran plot of `3b5u` (left) and the predicted structure (right)|
