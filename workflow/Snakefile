@@ -88,7 +88,7 @@ rule move:
   rules are easier to write.
   """
   input: get_input
-  output: temp("results/input/{identifier}.{ext}")
+  output: "results/input/{identifier}.{ext}"
   shell: "cp {input} {output}"
 
 

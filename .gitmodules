@@ -1,3 +1,6 @@
 [submodule "workflow/scripts/dependencies/distance-map"]
 	path = workflow/scripts/dependencies/distance-map
 	url = git@github.com:Luke-ebbis/distance-map.git
+[submodule "workflow/scripts/dependencies/Stereochemical-Assesments"]
+	path = workflow/scripts/dependencies/Stereochemical-Assesments
+	url = git@github.com:Luke-ebbis/Stereochemical-Assesments.git
