@@ -141,6 +141,39 @@ rule fasta:
     python3 workflow/scripts/pdb2fasta.py {input} {output}
     """
 
+## ramachandran_data:
+##    Calculate the ramachandran.
+##
+rule ramachandran_data:
+  input:
+    data="results/input/{identifier}.pdb",
+    ckp="results/checkpoints/git",
+    install="results/checkpoints/install_Stereochemical-Assesments"
+  output: "results/ramachandran/{identifier}.tsv"
+  shell:
+    """
+    cd workflow/scripts/dependencies/Stereochemical-Assesments/
+    unset PIXI_PROJECT_MANIFEST
+    pixi run python extract_angles.py -i ../../../../{input.data} -o  ../../../../{output}
+    """
+
+## ramachandran_plot:
+##    Make the ramachandran plot.
+##
+rule ramachandran_plot:
+  input:
+    data="results/ramachandran/{identifier}.tsv",
+    ckp="results/checkpoints/git",
+    install="results/checkpoints/install_Stereochemical-Assesments"
+  output: "results/ramachandran/{identifier}.png"
+  shell:
+    """
+    cd workflow/scripts/dependencies/Stereochemical-Assesments/
+    unset PIXI_PROJECT_MANIFEST
+    pixi run python plot.py -i ../../../../{input.data} -o  ../../../../{output} --type --legend
+    """
+
+
 ## contact_map:
 ##    Calculate the contact map of a structure.
 ##
