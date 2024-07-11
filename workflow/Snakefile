@@ -129,6 +129,49 @@ rule install:
     """
 
 
+## extract_b_factor:
+##    Extract the b factor column.
+## 
+rule extract_b_factor:
+  conda:
+    "envs/mol.yml"
+  input:
+    "results/input/{identifier}.pdb"
+  output:
+    "results/mol/{identifier}.bfactor.png",
+    "results/mol/{identifier}.bfactor.csv",
+  script:
+    "scripts/molecule/beta-factor.py"
+
+
+## determine_accesability_profile:
+##    Calculate the accessability profile of the calculated structures.
+## 
+rule determine_accessability_profile:
+  conda:
+    "envs/mol.yml"
+  input:
+    "results/input/{identifier}.pdb"
+  output:
+    "results/mol/{identifier}.sasa.png",
+    "results/mol/{identifier}.sasa.csv",
+  script:
+    "scripts/molecule/surface.py"
+
+## calculate_clashes:
+##    Determine the number of steric clashes.
+## 
+rule calculate_clashes:
+  conda:
+    "envs/mol.yml"
+  input:
+    "results/input/{identifier}.pdb"
+  output:
+    "results/mol/{identifier}.clashes.csv",
+  script:
+    "scripts/molecule/steric_clashes.py"
+
+
 ## fasta:
 ##    Determine the primary structure of a protein.
 ##

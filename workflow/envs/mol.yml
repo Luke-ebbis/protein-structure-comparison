@@ -1,0 +1,12 @@
+channels:
+  - conda-forge
+  - schrodinger
+  - bioconda
+dependencies:
+  - openmm
+  - mdtraj
+  - biopython
+  - seaborn
+  - polars
+  - pyarrow
+  - mdanalysis

@@ -13,13 +13,18 @@ curl -fsSL https://pixi.sh/install.sh | bash
 pixi install
 ```
 
-Because of the dependency on apptainer, this workflow only works on linux.
+Because of the dependency on apptainer, this workflow only works on linux. Pixi
+installs all the requirements: conda, pymol and snakemake. Snakemake takes care of
+the rest.
 
 ## Usage
 
 Run `pixi run help` for the help page. Targets can be made using `pixi run make <target>`
 
 ## Example
+
+
+### Alignment between 2 V atpases
 
 In this example, we will compare the structures of yeast V-ATPase state 2 ([6O7W](https://www.rcsb.org/structure/6O7W)) to that of Citrus ([7UWB](https://www.rcsb.org/structure/7UWB))
 
@@ -71,3 +76,8 @@ YGAIYSVSGPVVIAENMIGCAMYELVKVGHDNLVGEVIRIDGDKATIQVYEETAGLTVGDPVLRTGKPLSVELGPGLMET
 |---------------------------------------------|
 | Alignment between `6o7v` (red) and `7uwb` (blue) |
 
+If this cropped png is not good enough, open the pymol session of the two protein:
+
+```
+pixi run pymol results/comparison/7uwb-6o7w.usalign.sup.pse 
+```
