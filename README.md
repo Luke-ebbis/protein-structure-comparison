@@ -102,9 +102,9 @@ This gives the following results:
 |results/input/3b5u.pdb|5|0.012176708392187425|0|
 |results/input/P60709\_actin.pdb|2799|5.318057455540356|0|
 
-This shows that the `P60709_actin` structure is not close to the crystal structure. An Ramachandran analysis, 
+This shows that the `P60709_actin` structure is not close to the crystal structure. An Ramachandran analysis, shows that the number of unique confirmations is lower in the predicted structure than in the crystal structure.
 
 
-| ![](resources/output/3b5u.png) ![](resources/output/P60709_actin.png) |
-|---------------------------------------------|
-| Ramachandran plot of `3b5u` (left) and the predicted structure (right)|
+| ![image-20240711165000321](resources/output/ramachandran.png) |
+| ------------------------------------------------------------ |
+| Ramachandran plot of `3b5u` (left) and the predicted structure (right) |
