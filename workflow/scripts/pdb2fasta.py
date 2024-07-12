@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Code adapted from
 import Bio.PDB
 from Bio.SeqIO import PdbIO, FastaIO
 from Bio import SeqIO
