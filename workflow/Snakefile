@@ -98,7 +98,9 @@ rule convert:
   conda: 'envs/comparison.yml'
   input: "results/input/{identifier}.cif"
   output: "results/input/{identifier}.pdb"
-  shell: "python3 workflow/scripts/convert-cf-to-pdb.py {input} {output}"
+  params:
+    script=workflow.source_path("scripts/convert-cif-to-pdb.py")
+  shell: "python3 {params.script} {input} {output}"
 
 
 ## plip:
