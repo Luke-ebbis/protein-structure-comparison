@@ -158,6 +158,7 @@ rule determine_accessability_profile:
   script:
     "scripts/molecule/surface.py"
 
+
 ## calculate_clashes:
 ##    Determine the number of steric clashes.
 ## 
@@ -179,9 +180,11 @@ rule fasta:
   conda: 'envs/comparison.yml'
   input: "results/input/{identifier}.pdb"
   output: "results/fasta/{identifier}.fasta"
+  params:
+    script=workflow.source_path("scripts/pdb2fasta.py")
   shell:
     """
-    python3 workflow/scripts/pdb2fasta.py {input} {output}
+    python3 {params.script} {input} {output}
     """
 
 ## ramachandran_data:
