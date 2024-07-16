@@ -39,7 +39,7 @@ def extract_sequences(pdb_filename,
 def process_chain(chain, name: str|None = None, comment: str|None = None):
 
     if chain.id.startswith("???"):
-        chain_id = f"{name}_{chain.id.split("_")[1]}"
+        chain_id = f"{name}_{chain.id.split(":")[1]}"
         chain.id = chain_id
     if chain.description.startswith("???"):
         chain_comment = comment
