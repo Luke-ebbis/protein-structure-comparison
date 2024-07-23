@@ -8,7 +8,7 @@
 
 import os
 import glob
-include: "rules/helpers.smk"
+include: "rules/convertion.smk"
 ruleorder: download_rcsb > convert_cif2pdb > move
 
 
