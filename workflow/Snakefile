@@ -8,8 +8,8 @@
 
 import os
 import glob
-
-ruleorder: download_rcsb > convert > move
+include: "rules/helpers.smk"
+ruleorder: download_rcsb > convert_cif2pdb > move
 
 
 ## unzip
@@ -92,16 +92,6 @@ rule move:
   shell: "cp {input} {output}"
 
 
-rule convert:
-  """Convert a structure using biopython
-  """
-  conda: 'envs/comparison.yml'
-  input: "results/input/{identifier}.cif"
-  output: "results/input/{identifier}.pdb"
-  params:
-    script=workflow.source_path("scripts/convert-cif-to-pdb.py")
-  shell: "python3 {params.script} {input} {output}"
-
 
 ## plip:
 ##    Run the plip programme on the input data-file to determine the protein
@@ -175,19 +165,6 @@ rule calculate_clashes:
     "scripts/molecule/steric_clashes.py"
 
 
-## fasta:
-##    Determine the primary structure of a protein.
-##
-rule fasta:
-  conda: 'envs/comparison.yml'
-  input: "results/input/{identifier}.pdb"
-  output: "results/fasta/{identifier}.fasta"
-  params:
-    script=workflow.source_path("scripts/pdb2fasta.py")
-  shell:
-    """
-    python3 {params.script} {input} {output}
-    """
 
 ## ramachandran_data:
 ##    Calculate the ramachandran.
