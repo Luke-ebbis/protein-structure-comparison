@@ -11,6 +11,7 @@ import glob
 
 include: "rules/io.smk"
 include: "rules/convertion.smk"
+include: "rules/contacts.smk"
 
 ## plip:
 ##    Run the plip programme on the input data-file to determine the protein
@@ -117,23 +118,6 @@ rule ramachandran_plot:
     pixi run python plot.py -i ../../../../{input.data} -o  ../../../../{output} --type --legend
     """
 
-
-## contact_map:
-##    Calculate the contact map of a structure.
-##
-rule contact_map:
-  input:
-    data="results/input/{identifier}.pdb",
-    ckp="results/checkpoints/git",
-    install="results/checkpoints/install_distance-map"
-  output: directory("results/contact-map/{identifier}")
-  shell:
-    """
-    mkdir {output} -p
-    cd workflow/scripts/dependencies/distance-map/
-    unset PIXI_PROJECT_MANIFEST
-    pixi run map  ../../../../{input.data} ../../../../{output}
-    """
 
 rule crop:
   conda: 'envs/comparison.yml'

@@ -87,3 +87,20 @@ rule move:
   input: get_input
   output: "results/input/{identifier}.{ext}"
   shell: "cp {input} {output}"
+
+rule get_external_script:
+  output:
+    "../scripts/external/{url}"
+  shell:
+    """
+    wget -O {output}   "https://{wildcards.url}"
+    """
+
+rule get_external_env:
+  output:
+    "../envs/external/{url}"
+  shell:
+    """
+    wget -O {output}   "https://{wildcards.url}"
+    """
+
