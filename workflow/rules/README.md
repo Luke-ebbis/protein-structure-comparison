@@ -25,7 +25,7 @@ module analysis:
   config: config
 
 # import statement
-use rule * analysis from *
+use rule * analysis as *
 ```
 
 With this snakefile, the command
