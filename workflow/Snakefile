@@ -8,9 +8,7 @@
 
 import os
 import glob
-
-ruleorder: download_rcsb > convert > move
-
+import re
 
 ## unzip
 ##    If you place zip files from alphafold3 in the data folder, this rule
@@ -23,22 +21,35 @@ checkpoint unzip:
   shell: "mkdir {output} -p; unzip {input} -d {output.d}"
 
 
-## download_rcsb:
-##    If a input file is missing, it is download with this rule.
-##
-checkpoint download_rcsb:
-  output:
-    "results/downloads/{identifier}.{ext}"
-  shell:
-    "wget -O {output} 'https://files.rcsb.org/download/{wildcards.identifier}.{wildcards.ext}' --no-check-certificate"
+checkpoint download:
+    output:
+        "results/downloads/{identifier}.{ext}"
+    run:
+        import re
+        from pathlib import Path
+
+        uniprot_pattern = re.compile(r'^[A-NR-Z][0-9][A-Z][A-Z0-9][A-Z0-9][0-9]$')
+        pdb_pattern = re.compile(r'^[0-9][A-Za-z0-9]{3}$')
+
+        id = wildcards.identifier
+        outpath = Path(output[0])
+
+        if uniprot_pattern.fullmatch(id):
+          url = f"https://alphafold.ebi.ac.uk/files/AF-{id}-F1-model_v4.{wildcards.ext}"
+        elif pdb_pattern.fullmatch(id):
+          url = f"https://files.rcsb.org/download/{id}.{wildcards.ext}"
+        else:
+          raise ValueError(f"Identifier '{id}' does not match UniProt or PDB patterns.")
+
+        shell(f"wget -O {outpath} '{url}' --no-check-certificate")
 
 
-rule f:
-  """
-  This rule makes sure that the content of the AF3 folders gets detected.
-  """
-  input: rules.unzip.output.d
-  output: "data/{identifier}-unzipped/{name}.cif"
+# rule f:
+#   """
+#   This rule makes sure that the content of the AF3 folders gets detected.
+#   """
+#   input: rules.unzip.output.d
+#   output: "data/{identifier}-unzipped/{name}.cif"
 
 
 def get_input(wildcards):
@@ -56,9 +67,11 @@ def get_input(wildcards):
   final_target = wildcards.identifier
   final_format = wildcards.ext
   files = os.listdir("data")
-  match = [f for f in files if wildcards.identifier.startswith(f.split(".")[0])]
   match = [f for f in files if f != ".gitkeep"]
+  match = [f.split(".")[0] for f in match]
+  match = [f for f in match if f != ""]
 
+  print(match)
   # If the model could be from AF3
   if "_model_" in wildcards.identifier:
     match = [f for f in match if f.startswith(wildcards.identifier.split("_model_")[0])]
@@ -75,10 +88,11 @@ def get_input(wildcards):
     else:
       final_target = f"data/{wildcards.identifier}"
     output = f"{final_target}.{final_format}"
-  else:
+
+  if not os.path.isfile(output):
     # We need to download the file
-    download_rcsb_ckp = checkpoints.download_rcsb.get(**wildcards)
-    output = download_rcsb_ckp.output
+    download = checkpoints.download.get(**wildcards)
+    output = download.output
   return output
 
 
@@ -92,13 +106,13 @@ rule move:
   shell: "cp {input} {output}"
 
 
-rule convert:
-  """Convert a structure using biopython
-  """
-  conda: 'envs/comparison.yml'
-  input: "results/input/{identifier}.cif"
-  output: "results/input/{identifier}.pdb"
-  shell: "python3 workflow/scripts/convert-cf-to-pdb.py {input} {output}"
+# rule convert_to_pdb:
+#   """Convert a structure using biopython
+#   """
+#   conda: 'envs/comparison.yml'
+#   input: "results/input/{identifier}.cif"
+#   output: "results/input/{identifier}.pdb"
+#   shell: "python3 workflow/scripts/convert-cf-to-pdb.py {input} {output}"
 
 
 ## plip:
